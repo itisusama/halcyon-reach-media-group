@@ -92,6 +92,11 @@
     <p>Halcyon Reach Media Group · Private Working Document</p>
   </footer>
 
+  <div class="stat">
+  <span class="stat-number" id="profiled-count">01</span>
+  <span class="stat-label">Profiled</span>
+</div>
+
   <!-- ============ CHARACTER DETAIL OVERLAYS ============ -->
 <section class="characters">
   <div class="container">
@@ -113,43 +118,77 @@
   <!-- Add more character detail overlays below in the same format -->
 
 
-  <script>
-    function openCharacter(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.add('open');
-      el.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      el.scrollTop = 0;
-    }
-    function closeCharacter(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('open');
-      el.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.character-detail.open').forEach(el => {
-          el.classList.remove('open');
-          el.setAttribute('aria-hidden', 'true');
-        });
-        document.body.style.overflow = '';
+ <script>
+  // ========== CHARACTER MANIFEST ==========
+  // Add each new character's ID here, in the order you want them displayed.
+  const CHARACTERS = [
+    'ayesha-tariq',
+    // 'hira-malik',   ← uncomment when you add her file
+  ];
+
+  // ========== LOADER ==========
+  async function loadCharacters() {
+    const grid = document.getElementById('character-grid');
+    const details = document.getElementById('character-details');
+
+    for (const id of CHARACTERS) {
+      try {
+        const res = await fetch(`characters/${id}.html`);
+        if (!res.ok) throw new Error(res.statusText);
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        const card = doc.querySelector('template[data-card]');
+        const detail = doc.querySelector('template[data-detail]');
+
+        if (card) grid.appendChild(card.content.cloneNode(true));
+        if (detail) details.appendChild(detail.content.cloneNode(true));
+      } catch (err) {
+        console.error(`Could not load characters/${id}.html`, err);
       }
-    });
-    // Close on backdrop click
+    }
+
+    // Rebind backdrop-click close on newly injected overlays
     document.querySelectorAll('.character-detail').forEach(el => {
       el.addEventListener('click', (e) => {
-        if (e.target === el) {
-          el.classList.remove('open');
-          el.setAttribute('aria-hidden', 'true');
-          document.body.style.overflow = '';
-        }
+        if (e.target === el) closeCharacter(el.id);
       });
     });
-  </script>
+
+    // Update the "Profiled" counter
+    const stat = document.getElementById('profiled-count');
+    if (stat) stat.textContent = String(CHARACTERS.length).padStart(2, '0');
+  }
+
+  function openCharacter(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('open');
+    el.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    el.scrollTop = 0;
+  }
+
+  function closeCharacter(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('open');
+    el.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.character-detail.open').forEach(el => {
+        el.classList.remove('open');
+        el.setAttribute('aria-hidden', 'true');
+      });
+      document.body.style.overflow = '';
+    }
+  });
+
+  loadCharacters();
+</script>
 
 </body>
 </html>
