@@ -1,16 +1,28 @@
 <template data-card>
-  <article class="character-card" onclick="openCharacter('hira-malik')">
-    <div class="portrait">
-      <img src="images/Hira_Malik.jpeg" alt="Hira Malik">
-      <span class="floor-badge">Floor 1</span>
+<section class="characters">
+    <div class="container">
+
+      <div class="character-grid">
+
+        <!-- ==== CHARACTER CARD: HIRA MALIK ==== -->
+        <article class="character-card" onclick="openCharacter('hira-malik')">
+           <div class="portrait">
+            <img src="images/Hira_Malik.jpeg" alt="Hira Malik">
+            <span class="floor-badge">Floor 1</span>
+            </div>
+            <div class="card-body">
+            <span class="role-code">R2 (f)</span>
+            <h3>Hira Malik</h3>
+            <p class="role">Reception &amp; Admin · Age 26</p>
+            <p class="hook">Five years at the front desk. Twenty-three stars in the notebook.</p>
+            </div>
+        </article>
+
+        <!-- Add more character cards below in the same format -->
+
+      </div>
     </div>
-    <div class="card-body">
-      <span class="role-code">R2 (f)</span>
-      <h3>Hira Malik</h3>
-      <p class="role">Reception &amp; Admin · Age 26</p>
-      <p class="hook">Five years at the front desk. Twenty-three stars in the notebook.</p>
-    </div>
-  </article>
+  </section>
 </template>
 
 <template data-detail>
